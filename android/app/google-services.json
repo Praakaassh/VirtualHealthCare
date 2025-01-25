@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "387375906951",
+    "project_id": "virtual-healthcare-assis-36428",
+    "storage_bucket": "virtual-healthcare-assis-36428.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387375906951:android:9c3e7aac184c0aae233822",
+        "android_client_info": {
+          "package_name": "com.example.virtual_healthcare_assistant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "387375906951-otlht629i7gq6krihpapkdmj70u05t3d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.virtual_healthcare_assistant",
+            "certificate_hash": "ccb19afcd8a58bccd1a9ae852da72d51c9e63874"
+          }
+        },
+        {
+          "client_id": "387375906951-m8sbkmtj4spn96aclcf3ovgvuebre1dm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn0iBDh9CmShYLRtCJsNluwkMR9FVUa4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "387375906951-m8sbkmtj4spn96aclcf3ovgvuebre1dm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
