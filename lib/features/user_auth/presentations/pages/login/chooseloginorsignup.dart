@@ -7,15 +7,45 @@ import 'package:virtual_healthcare_assistant/features/user_auth/presentations/pa
 import 'package:virtual_healthcare_assistant/features/user_auth/presentations/pages/login/signuppage.dart';
 import 'package:virtual_healthcare_assistant/features/user_auth/presentations/pages/settings/personaldetails.dart';
 
-class ChooseSignupOrLogin extends StatelessWidget {
+class ChooseSignupOrLogin extends StatefulWidget {
   const ChooseSignupOrLogin({super.key});
 
+  @override
+  _ChooseSignupOrLoginState createState() => _ChooseSignupOrLoginState();
+}
+
+class _ChooseSignupOrLoginState extends State<ChooseSignupOrLogin> {
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfLoggedIn();
+  }
+
+  Future<void> _checkIfLoggedIn() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      // User is already logged in, navigate to HomePage
+      await _checkUserDetails(context);
+    }
+  }
+
   Future<User?> _signInWithGoogle(BuildContext context) async {
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn();
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-      if (googleUser == null) return null;
+      if (googleUser == null) {
+        setState(() {
+          _isLoading = false;
+        });
+        return null;
+      }
 
       final GoogleSignInAuthentication googleAuth =
       await googleUser.authentication;
@@ -34,6 +64,9 @@ class ChooseSignupOrLogin extends StatelessWidget {
       return userCredential.user;
     } catch (e) {
       print('Error signing in with Google: $e');
+      setState(() {
+        _isLoading = false;
+      });
       return null;
     }
   }
@@ -69,6 +102,10 @@ class ChooseSignupOrLogin extends StatelessWidget {
       }
     } catch (e) {
       print('Error checking details: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -115,11 +152,14 @@ class ChooseSignupOrLogin extends StatelessWidget {
                   children: [
                     // Log In Button
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: _isLoading
+                          ? null
+                          : () {
                         // Navigate to Log In page
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          MaterialPageRoute(
+                              builder: (context) => LoginPage()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -131,17 +171,21 @@ class ChooseSignupOrLogin extends StatelessWidget {
                       ),
                       child: const Text(
                         'Log In',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w600),
                       ),
                     ),
                     const SizedBox(height: 16),
                     // Create Account Button
                     OutlinedButton(
-                      onPressed: () {
+                      onPressed: _isLoading
+                          ? null
+                          : () {
                         // Navigate to Create Account page
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SignUpPage()),
+                          MaterialPageRoute(
+                              builder: (context) => SignUpPage()),
                         );
                       },
                       style: OutlinedButton.styleFrom(
@@ -163,7 +207,7 @@ class ChooseSignupOrLogin extends StatelessWidget {
                     const SizedBox(height: 10),
                     // Sign in with Google Button
                     OutlinedButton.icon(
-                      onPressed: () => _signInWithGoogle(context),
+                      onPressed: _isLoading ? null : () => _signInWithGoogle(context),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         side: BorderSide(color: Colors.grey, width: 2),
@@ -186,6 +230,11 @@ class ChooseSignupOrLogin extends StatelessWidget {
                     ),
                   ],
                 ),
+                if (_isLoading)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: CircularProgressIndicator(),
+                  ),
               ],
             ),
           ),
